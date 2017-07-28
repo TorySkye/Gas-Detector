@@ -8,7 +8,6 @@
 #define F_CPU 8000000UL
 #include <avr/io.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>
 #include <stdlib.h>
 
 /* Defines the threshold value for MQ-2 Gas Sensor */
