@@ -9,8 +9,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
 /* Defines the threshold value for MQ-2 Gas Sensor */
@@ -81,37 +79,37 @@ uint16_t ADC_read (uint8_t channel)
 
 int main(void)
 {
-	/*ADC initialization*/
+	/* ADC initialization */
 	ADC_init ();
-	/*USART initialization*/
+	/* USART initialization */
 	USART_init (9600);
 
-	/*PBO pin of PortB is declared output (LED is connected)*/
+	/* PBO pin of PortB is declared output (LED is connected) */
 	DDRB = 0x01;
-	/*PCO pin of PortC is declared output (Buzzer is connected)*/
+	/* PCO pin of PortC is declared output (Buzzer is connected) */
 	DDRC = 0x01;	
-	/*PBO pin of PortB is declared low*/
+	/* PBO pin of PortB is declared low */
 	PORTB = 0b00000001;
 	
     while (1) 
     {
-		/*Read analog value from pin A0*/
+		/* Read analog value from pin A0 */
 		ADC_value = ADC_read(0);
 		mq2_gas_sensor_output = ADC_value*10;
-		/*Send value to string*/
+		/* Send value to string */
 		sprintf(ADC_string, "Value: %d ppm", mq2_gas_sensor_output);
-		/*Print value on serial monitor*/
+		/* Print value on serial monitor */
 		USART_message(ADC_string);
-		/*Print new line*/
+		/* Print new line */
 		USART_send (10);
 		USART_send (13);
 		
-		/*Checking MQ-2 Gas Sensor output with threshold to turn On or Off Buzzer*/
+		/* Checking MQ-2 Gas Sensor output with threshold to turn On or Off Buzzer */
 		if(mq2_gas_sensor_output > MQ2_SENSOR_REF)
 		{
-			/*Buzzer is On*/
+			/* Buzzer is On */
 			PORTC = 0x01;
-			/*Set LED state high*/
+			/* Set LED state high */
 			PORTB &=~ (1<<PB0);
 			USART_message(alarm_message);
 			USART_send (10);
@@ -119,9 +117,9 @@ int main(void)
 		}
 		else
 		{
-			/*Buzzer is Off*/
+			/* Buzzer is Off */
 			PORTC = 0x00;
-			/*Set LED state low*/
+			/* Set LED state low */
 			PORTB |= (1<<PB0);
 		}
     }
